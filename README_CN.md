@@ -33,7 +33,7 @@
 | :-----------: | :-----: |
 | I2C:SDA(IO_7) |   SDA   |
 |   NC(IO_15)   |   NC    |
-| GPIOHS(IO_20) |   IRQ   |
+| NC(IO_20)     |   IRQ   |
 |   NC(IO_21)   |   NC    |
 | GPIOHS(IO_8)  |   SHT   |
 | I2C:SCL(IO_6) |   SCL   |
@@ -44,78 +44,76 @@
 
 ### 5.1. IO 配置
 
-将 MCU 原理图对应的 IO 口配置为 SPI 功能引脚。
+将 MCU 原理图对应的 IO 口配置为 I2C 功能引脚。
 
 * C 示例
   
-  此示例使用的是软件模拟 SPI，所以在此需将设置对应引脚为 GPIOHS 功能而不是 SPI 功能，具体实现请查看完整代码。
   ```c
-  fpioa_set_function(RFID_CS_PIN, FUNC_GPIOHS0 + RFID_CS_HSNUM); // RFID_CS_PIN: 20;
-  fpioa_set_function(RFID_CK_PIN, FUNC_GPIOHS0 + RFID_CK_HSNUM); // RFID_CK_PIN: 21;
-  fpioa_set_function(RFID_MO_PIN, FUNC_GPIOHS0 + RFID_MO_HSNUM); // RFID_MO_PIN: 8;
-  fpioa_set_function(RFID_MI_PIN, FUNC_GPIOHS0 + RFID_MI_HSNUM); // RFID_MI_PIN: 15;
+    //set io mux
+    fpioa_set_function(VL53L0X_SCL, FUNC_I2C0_SCLK + VL53L0X_I2C_DEVICE * 2);
+    fpioa_set_function(VL53L0X_SDA, FUNC_I2C0_SDA + VL53L0X_I2C_DEVICE * 2);
+    fpioa_set_function(VL53L0X_SHT, FUNC_GPIOHS0 + VL53L0X_SHT);
 
-  gpiohs_set_drive_mode(spi_io_cfg.hs_cs, GPIO_DM_OUTPUT);
-  gpiohs_set_drive_mode(spi_io_cfg.hs_clk, GPIO_DM_OUTPUT);
-  gpiohs_set_drive_mode(spi_io_cfg.hs_mosi, GPIO_DM_OUTPUT);
-  gpiohs_set_drive_mode(spi_io_cfg.hs_miso, GPIO_DM_INPUT);
+    gpiohs_set_drive_mode(VL53L0X_SHT, GPIO_DM_OUTPUT);
   ```
 
 * MaixPy 示例
   ```python
-  # 20: CS_NUM;
-  fm.register(20, fm.fpioa.GPIOHS20, force=True)
-  # set gpiohs work mode to output mode
-  cs = GPIO(GPIO.GPIOHS20, GPIO.OUT)
+    XSHUT = GPIO(GPIO.GPIOHS0, GPIO.OUT)
   ```
 
-### 5.2. SPI 初始化
+### 5.2. I2C 初始化
 
 * C 示例
   
-  软件 SPI 只需要配置对应引脚，并没有 SPI 的初始化。
+  ```c
+    //i2c init
+    maix_i2c_init(VL53L0X_I2C_DEVICE, 7, VL53L0X_I2C_FREQ_KHZ * 1000);
+  ```
 
 * MaixPy 示例
   ```python
-  # RFID_SCK: 21; RFID_SI:8; RFID_SO: 15;
-  spi1 = SPI(SPI.SPI1, mode=SPI.MODE_MASTER, baudrate=600 * 1000,
-          polarity=0, phase=0, bits=8, firstbit=SPI.MSB, sck=21, mosi=8, miso=15)
+    i2c = I2C(I2C.I2C0, freq=100000, scl=6, sda=7)
   ```
 
 ## 6. 使用方式
 
 * 流程
   1. 初始化
-  2. 扫描并绑定卡片
-  3. 读写数据
+  2. 校准(可选)
+  3. 读取距离(多种模式可选)
 
 * C 示例
+
   ```c
-  // detected card
-  PcdRequest(0x52, type)
+    while (vl53l0x_init(&vl53l0x_dev)) {
+          printf("VL53L0X init error!!!\r\n");
+          msleep(500);
+    }
 
-  // auth and bind...
+    printf("VL53L0X init success!\r\n");
 
-  // read or write 16 bytes data from sector 0x11
-  PcdWrite(0x11, w_buf)
-  PcdRead(0x11, &r_buf)
+    // adjusting
+    printf("VL53L0X adjusting\r\n");
+    vl53l0x_calibration_test(&vl53l0x_dev);
+
+    // get distance
+    printf("VL53L0X start work\r\n");
+    vl53l0x_general_test(&vl53l0x_dev);
   ```
   
 * MaixPy 示例
   ```python
-  # Create an object of the class MFRC522
-  MIFAREReader = MFRC522(spi1, cs)
-  
-  # detected and auth, bind...
-  
-  # read or write 16 bytes data from sector 0x11
-  MIFAREReader.MFRC522_Write(0x11, data)
-  MIFAREReader.MFRC522_Read(0x11)
+    distance = VL53L0X(i2c)
+	  while True:
+		mm = distance.read()
+		utime.sleep_ms(100)
+		print(mm)
   ```
 
 ## 7. 运行环境
 
-|  语言  | 开发板   | SDK/固件版本                   |
+|  语言  | 开发板    | SDK/固件版本                    |
 | :----: | :------- | :----------------------------- |
 |   C    | MaixCube | kendryte-standalone-sdk v0.5.6 |
 | MaixPy | MaixCube | maixpy v0.5.1                  |
@@ -124,11 +122,38 @@
 
 * C
 
-  <img src="img/c_log.png" height="200" />
+  <img src="img/log_c.png" height="200" />
 
 * MaixPy
 
   <img src="img/maixpy_log.png" height="200" />
+
+## 9. 适配其他板型
+
+修改以下参数即可适配其他 K210.
+
+* C
+
+```c
+  // board_config.h
+  #define VL53L0X_I2C_DEVICE 0 // i2c device number
+  #define VL53L0X_I2C_FREQ_KHZ 100 // i2c frequence
+  #define VL53L0X_SCL 6 // scl
+  #define VL53L0X_SDA 7 // sda
+  #define VL53L0X_SHT 8 // sht
+```
+
+* MaixPy
+
+```python
+################### config ###################
+	TOF_I2C_NUM = const(I2C.I2C0)
+	TOF_FREQ = const(100000)
+	TOF_SCL = const(6)
+	TOF_SDA = const(7)
+	TOF_SHT = const(8)
+##############################################
+```
 
 ## 10. 许可
 
