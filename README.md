@@ -60,7 +60,8 @@ Configure the IO port corresponding to the schematic diagram as I2C function
 * MaixPy
 
   ```python
-    XSHUT = GPIO(GPIO.GPIOHS0, GPIO.OUT)    
+    fm.register(VL53L0X_SHT, fm.fpioa.GPIOHS0, force=True)
+    XSHUT = GPIO(GPIO.GPIOHS0, GPIO.OUT)  
   ```
 
 ### I2C initalization
@@ -75,7 +76,7 @@ Configure the IO port corresponding to the schematic diagram as I2C function
 * MaixPy
 
   ```python
-  i2c = I2C(I2C.I2C0, freq=100000, scl=6, sda=7)
+    i2c = I2C(VL53L0X_I2C_NUM, freq=VL53L0X_FREQ, scl=VL53L0X_SCL, sda=VL53L0X_SDA)
   ```
 
 ## Method of application
@@ -108,11 +109,12 @@ Configure the IO port corresponding to the schematic diagram as I2C function
 * MaixPy
 
   ```python
-    distance = VL53L0X(i2c)
-    while True:
-    mm = distance.read()
-    utime.sleep_ms(100)
-    print(mm)
+    # create obj and read distance
+	  tof = VL53L0X(i2c)
+	  while True:
+      mm = tof.read()
+      utime.sleep_ms(100)
+      print(mm)
   ```
 
 ## Runtime enviroments
@@ -139,7 +141,7 @@ Modify the following parameters to fit other K210.
 * C
 
 ```c
-  // board_config.h
+// board_config.h
   #define VL53L0X_I2C_DEVICE 0 // i2c device number
   #define VL53L0X_I2C_FREQ_KHZ 100 // i2c frequence
   #define VL53L0X_SCL 6 // scl
@@ -151,11 +153,11 @@ Modify the following parameters to fit other K210.
 
 ```python
 ################### config ###################
-	TOF_I2C_NUM = const(I2C.I2C0)
-	TOF_FREQ = const(100000)
-	TOF_SCL = const(6)
-	TOF_SDA = const(7)
-	TOF_SHT = const(8)
+  VL53L0X_I2C_NUM = const(I2C.I2C0)
+	VL53L0X_FREQ = const(100000)
+	VL53L0X_SCL = const(6)
+	VL53L0X_SDA = const(7)
+	VL53L0X_SHT = const(8)
 ##############################################
 ```
 

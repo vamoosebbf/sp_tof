@@ -59,6 +59,7 @@
 
 * MaixPy 示例
   ```python
+    fm.register(VL53L0X_SHT, fm.fpioa.GPIOHS0, force=True)
     XSHUT = GPIO(GPIO.GPIOHS0, GPIO.OUT)
   ```
 
@@ -73,7 +74,7 @@
 
 * MaixPy 示例
   ```python
-    i2c = I2C(I2C.I2C0, freq=100000, scl=6, sda=7)
+    i2c = I2C(VL53L0X_I2C_NUM, freq=VL53L0X_FREQ, scl=VL53L0X_SCL, sda=VL53L0X_SDA)
   ```
 
 ## 6. 使用方式
@@ -104,11 +105,12 @@
   
 * MaixPy 示例
   ```python
-    distance = VL53L0X(i2c)
+    # create obj and read distance
+	  tof = VL53L0X(i2c)
 	  while True:
-		mm = distance.read()
-		utime.sleep_ms(100)
-		print(mm)
+      mm = tof.read()
+      utime.sleep_ms(100)
+      print(mm)
   ```
 
 ## 7. 运行环境
@@ -128,7 +130,7 @@
 
   <img src="img/maixpy_log.png" height="200" />
 
-## 9. 适配其他板型
+## 9. 移植
 
 修改以下参数即可适配其他 K210.
 
@@ -147,11 +149,11 @@
 
 ```python
 ################### config ###################
-	TOF_I2C_NUM = const(I2C.I2C0)
-	TOF_FREQ = const(100000)
-	TOF_SCL = const(6)
-	TOF_SDA = const(7)
-	TOF_SHT = const(8)
+	VL53L0X_I2C_NUM = const(I2C.I2C0)
+	VL53L0X_FREQ = const(100000)
+	VL53L0X_SCL = const(6)
+	VL53L0X_SDA = const(7)
+	VL53L0X_SHT = const(8)
 ##############################################
 ```
 

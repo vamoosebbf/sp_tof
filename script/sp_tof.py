@@ -291,27 +291,26 @@ class VL53L0X:
 
 if __name__ == "__main__":
 	################### config ###################
-	TOF_I2C_NUM = const(I2C.I2C0)
-	TOF_FREQ = const(100000)
-	TOF_SCL = const(6)
-	TOF_SDA = const(7)
-	TOF_SHT = const(8)
+	VL53L0X_I2C_NUM = const(I2C.I2C0)
+	VL53L0X_FREQ = const(100000)
+	VL53L0X_SCL = const(6)
+	VL53L0X_SDA = const(7)
+	VL53L0X_SHT = const(8)
 	##############################################
 
-	import sensor, image, time
-	sensor.reset()
-	sensor.set_pixformat(sensor.RGB565)
-	sensor.set_framesize(sensor.QVGA)
-	sensor.skip_frames(time = 2000)
-	fm.register(TOF_SHT, fm.fpioa.GPIOHS0, force=True)
+	# io configure
+	fm.register(VL53L0X_SHT, fm.fpioa.GPIOHS0, force=True)
 	XSHUT = GPIO(GPIO.GPIOHS0, GPIO.OUT)
 	XSHUT.value(1)
-	i2c = I2C(TOF_I2C_NUM, freq=TOF_FREQ, scl=TOF_SCL, sda=TOF_SDA)
+
+	# i2c init
+	i2c = I2C(VL53L0X_I2C_NUM, freq=VL53L0X_FREQ, scl=VL53L0X_SCL, sda=VL53L0X_SDA)
 	devices = i2c.scan()
 	print(devices)
 
-	distance = VL53L0X(i2c)
+	# create obj and read distance
+	tof = VL53L0X(i2c)
 	while True:
-		mm = distance.read()
+		mm = tof.read()
 		utime.sleep_ms(100)
 		print(mm)
