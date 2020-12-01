@@ -141,7 +141,7 @@ Modify the following parameters to fit other K210.
 * C
 
 ```c
-// board_config.h
+  // board_config.h
   #define VL53L0X_I2C_DEVICE 0 // i2c device number
   #define VL53L0X_I2C_FREQ_KHZ 100 // i2c frequence
   #define VL53L0X_SCL 6 // scl
@@ -152,13 +152,13 @@ Modify the following parameters to fit other K210.
 * MaixPy
 
 ```python
-################### config ###################
+  ################### config ###################
   VL53L0X_I2C_NUM = const(I2C.I2C0)
 	VL53L0X_FREQ = const(100000)
 	VL53L0X_SCL = const(6)
 	VL53L0X_SDA = const(7)
 	VL53L0X_SHT = const(8)
-##############################################
+  ##############################################
 ```
 
 ## LICENSE
