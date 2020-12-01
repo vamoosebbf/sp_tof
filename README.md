@@ -136,7 +136,7 @@ Configure the IO port corresponding to the schematic diagram as I2C function
 
 ## Transplant
 
-Modify the following parameters to fit other K210.
+Modify the following parameters to fit other K210 boards.
 
 * C
 

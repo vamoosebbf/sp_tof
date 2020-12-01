@@ -4,7 +4,7 @@
     
 [English](README.md)
 
-## 1. 目录结构
+## 目录结构
 
 |  目录  | 描述           |
 | :----: | :------------- |
@@ -13,7 +13,7 @@
 | script | MaixPy脚本示例 |
 |  src   | C裸机程序示例  |
 
-## 2. 介绍
+## 介绍
 
 <img src="img/sp_tof.png" style="padding-right:100px;" align="right" width="" height="500" />
 
@@ -21,11 +21,11 @@
 
 *查看[模块规格书](doc/SP-ToF(1P)规格书V1.0.pdf)获取更多特性信息*
 
-## 3. 引脚图
+## 引脚图
 
 <img src="img/back.png" height="300" />
 
-## 4. 接线方式
+## 接线方式
 
 <img src="img/connection.png" height="250">
 
@@ -40,9 +40,9 @@
 |   2.8~3.5V    |  3.3V   |
 |      GND      |   GND   |
 
-## 5. MCU 配置
+## MCU 配置
 
-### 5.1. IO 配置
+### IO 配置
 
 将 MCU 原理图对应的 IO 口配置为 I2C 功能引脚。
 
@@ -63,7 +63,7 @@
     XSHUT = GPIO(GPIO.GPIOHS0, GPIO.OUT)
   ```
 
-### 5.2. I2C 初始化
+### I2C 初始化
 
 * C 示例
   
@@ -77,7 +77,7 @@
     i2c = I2C(VL53L0X_I2C_NUM, freq=VL53L0X_FREQ, scl=VL53L0X_SCL, sda=VL53L0X_SDA)
   ```
 
-## 6. 使用方式
+## 使用方式
 
 * 流程
   1. 初始化
@@ -113,14 +113,14 @@
       print(mm)
   ```
 
-## 7. 运行环境
+## 运行环境
 
 |  语言  | 开发板    | SDK/固件版本                    |
 | :----: | :------- | :----------------------------- |
 |   C    | MaixCube | kendryte-standalone-sdk v0.5.6 |
 | MaixPy | MaixCube | maixpy v0.5.1                  |
 
-## 8. 运行结果
+## 运行结果
 
 * C
 
@@ -130,9 +130,9 @@
 
   <img src="img/maixpy_log.png" height="200" />
 
-## 9. 移植
+## 移植
 
-修改以下参数即可适配其他 K210.
+修改以下参数即可适配其他 K210 开发板.
 
 * C
 
@@ -157,11 +157,11 @@
   ##############################################
 ```
 
-## 10. 许可
+## 许可
 
 请查看 [LICENSE](LICENSE.md) 文件.
 
-## 11. 相关信息
+## 相关信息
 
 | 版本号 |   编辑人   |
 | :----: | :--------: |
