@@ -33,7 +33,7 @@
 | :-----------: | :-----: |
 | I2C:SDA(IO_7) |   SDA   |
 |   NC(IO_15)   |   NC    |
-| NC(IO_20)     |   IRQ   |
+|   NC(IO_20)   |   IRQ   |
 |   NC(IO_21)   |   NC    |
 | GPIOHS(IO_8)  |   SHT   |
 | I2C:SCL(IO_6) |   SCL   |
@@ -115,7 +115,7 @@
 
 ## 运行环境
 
-|  语言  | 开发板    | SDK/固件版本                    |
+|  语言  | 开发板   | SDK/固件版本                   |
 | :----: | :------- | :----------------------------- |
 |   C    | MaixCube | kendryte-standalone-sdk v0.5.6 |
 | MaixPy | MaixCube | maixpy v0.5.1                  |
