@@ -149,11 +149,11 @@
 
 ```python
   ################### config ###################
-VL53L0X_I2C_NUM = const(I2C.I2C0)
-VL53L0X_FREQ = const(100000)
-VL53L0X_SCL = const(6)
-VL53L0X_SDA = const(7)
-VL53L0X_SHT = const(8)
+  VL53L0X_I2C_NUM = const(I2C.I2C0)
+  VL53L0X_FREQ = const(100000)
+  VL53L0X_SCL = const(6)
+  VL53L0X_SDA = const(7)
+  VL53L0X_SHT = const(8)
   ##############################################
 ```
 
