@@ -33,6 +33,7 @@ class VL53L0X:
 		self.address = address
 		self.init()
 		self._started = False
+
 	def _registers(self, register, values=None, struct='B'):
 		if values is None:
 			size = ustruct.calcsize(struct)
@@ -41,10 +42,12 @@ class VL53L0X:
 			return values
 		data = ustruct.pack(struct, *values)
 		self.i2c.writeto_mem(self.address, register, data)
+
 	def _register(self, register, value=None, struct='B'):
 		if value is None:
 			return self._registers(register, struct=struct)[0]
 		self._registers(register, (value,), struct=struct)
+
 	def _flag(self, register=0x00, bit=0, value=None):
 		data = self._register(register)
 		mask = 1 << bit
@@ -55,9 +58,11 @@ class VL53L0X:
 		else:
 			data &= ~mask
 		self._register(register, data)
+
 	def _config(self, *config):
 		for register, value in config:
 			self._register(register, value)
+
 	def init(self, power2v8=True):
 		self._flag(_EXTSUP_HV, 0, power2v8)
 		self._config(
@@ -183,6 +188,7 @@ class VL53L0X:
 		self._register(_SYSTEM_SEQUENCE, 0x02)
 		self._calibrate(0x00)
 		self._register(_SYSTEM_SEQUENCE, 0xe8)
+
 	def _spad_info(self):
 		self._config(
 			(0x80, 0x01),
@@ -222,6 +228,7 @@ class VL53L0X:
 		count = value & 0x7f
 		is_aperture = bool(value & 0b10000000)
 		return count, is_aperture
+
 	def _calibrate(self, vhv_init_byte):
 		self._register(_SYSRANGE_START, 0x01 | vhv_init_byte)
 		for timeout in range(_IO_TIMEOUT):
@@ -232,6 +239,7 @@ class VL53L0X:
 			raise TimeoutError()
 		self._register(_INTERRUPT_CLEAR, 0x01)
 		self._register(_SYSRANGE_START, 0x00)
+
 	def start(self, period=0):
 		self._config(
 		  (0x80, 0x01),
@@ -251,6 +259,7 @@ class VL53L0X:
 		else:
 			self._register(_SYSRANGE_START, 0x02)
 		self._started = True
+
 	def stop(self):
 		self._register(_SYSRANGE_START, 0x01)
 		self._config(
@@ -261,6 +270,7 @@ class VL53L0X:
 		  (0xFF, 0x00),
 		)
 		self._started = False
+		
 	def read(self):
 		if not self._started:
 			self._config(
