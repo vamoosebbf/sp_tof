@@ -33,7 +33,7 @@ The VL53L0X sensor used in this module is an I2C interface and a long distance s
 | :-----------: | :-----: |
 | I2C:SDA(IO_7) |   SDA   |
 |   NC(IO_15)   |   NC    |
-| NC(IO_20)     |   IRQ   |
+|   NC(IO_20)   |   IRQ   |
 |   NC(IO_21)   |   NC    |
 | GPIOHS(IO_8)  |   SHT   |
 | I2C:SCL(IO_6) |   SCL   |
@@ -167,6 +167,6 @@ See [LICENSE](LICENSE.md) file
 
 ## Othre information
 
-| Version |   Editor   |
-| :-----: | :--------: |
-|  v0.1   | vamoosebbf |
+| Version |   Editor   |   Date    |
+| :-----: | :--------: | :-------: |
+|  v1.0   | vamoosebbf | 2020.12.2 |
